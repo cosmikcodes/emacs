@@ -3,14 +3,6 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (package-initialize)
-
-;; speedbar
-(require 'sr-speedbar)
-(setq sr-speedbar-auto-refresh t)
-(setq speedbar-show-unknown-files t) ; show all files
-(setq speedbar-use-images nil) ; use text for buttons
-(setq sr-speedbar-right-side nil) ; put on left side
-;; tab = 4 spaces
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -19,71 +11,49 @@
  '(custom-enabled-themes (quote (badwolf)))
  '(custom-safe-themes
    (quote
-	("604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" default)))
- '(flymake-google-cpplint-command "/usr/local/bin/cpplint.py")
- '(font-use-system-font t)
- '(indent-line-function (quote insert-tab) t)
- '(indent-tabs-mode t)
- '(package-selected-packages
-   (quote
-	(badwolf-theme flymake-google-cpplint auto-complete-c-headers auto-complete google-c-style iedit anzu ws-butler dtrt-indent clean-aindent-mode yasnippet undo-tree volatile-highlights helm-gtags helm-projectile helm-swoop helm zygospore projectile use-package company-irony)))
- '(tab-width 4))
-(add-hook 'text-mode-hook
-      (lambda() (setq indent-line-function 'insert-tab)))
-;; show side lines
-(defun my-c-mode-common-hook ()
-  (line-number-mode 1))
-(add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
-; start auto-complete with emacs
-(require 'auto-complete)
-; do default config for auto-complete
-(require 'auto-complete-config)
-(ac-config-default)
-; start yasnippet with emacs
-(require 'yasnippet)
-(yas-global-mode 1)
-; let's define a function which initializes auto-complete-c-headers and gets called for c/c++ hooks
-(defun my:ac-c-header-init ()
-  (require 'auto-complete-c-headers)
-  (add-to-list 'ac-sources 'ac-source-c-headers)
-  (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-redhat-linux/6.3.1/include")
-)
-; now let's call this function from c/c++ hooks
-(add-hook 'c++-mode-hook 'my:ac-c-header-init)
-(add-hook 'c-mode-hook 'my:ac-c-header-init)
-
-; start flymake-google-cpplint-load
-; let's define a function for flymake initialization
-(defun my:flymake-google-init () 
-  (require 'flymake-google-cpplint)
-  (custom-set-variables
-   '(flymake-google-cpplint-command "/usr/local/bin/cpplint.py"))
-  (flymake-google-cpplint-load)
-)
-(add-hook 'c-mode-hook 'my:flymake-google-init)
-(add-hook 'c++-mode-hook 'my:flymake-google-init)
-
-; start google-c-style with emacs
-(require 'google-c-style)
-(add-hook 'c-mode-common-hook 'google-set-c-style)
-(add-hook 'c-mode-common-hook 'google-make-newline-indent)
-
-; iedit
-(define-key global-map (kbd "C-c ;") 'iedit-mode)
-
-
-
-
-
-
-
-
-
-
-
+    ("604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" default)))
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Inconsolata" :foundry "PfEd" :slant normal :weight normal :height 108 :width normal)))))
+ )
+
+;; speedbar
+(require 'sr-speedbar)
+(setq sr-speedbar-auto-refresh t)
+(setq speedbar-show-unknown-files t) ; show all files
+(setq speedbar-use-images nil) ; use text for buttons
+(setq sr-speedbar-right-side nil) ; put on left side
+
+;; start auto-complete with emacs
+(require 'auto-complete)
+
+;; do default config for auto-complete
+(require 'auto-complete-config)
+(ac-config-default)
+
+;; start yasnippet with emacs
+(require 'yasnippet)
+(yas-global-mode 1)
+
+;; let's define a function which initializes auto-complete-c-headers and gets called for c/c++ hooks
+(defun my:ac-c-header-init ()
+  (require 'auto-complete-c-headers)
+  (add-to-list 'ac-sources 'ac-source-c-headers)
+  (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-linux-gnu/5/include")
+)
+;; now let's call this function from c/c++ hooks
+(add-hook 'c++-mode-hook 'my:ac-c-header-init)
+(add-hook 'c-mode-hook 'my:ac-c-header-init)
+
+;; iedit
+(define-key global-map (kbd "C-c ;") 'iedit-mode)
+
+;; style
+(defun my-c-mode-hook ()
+  (setq c-basic-offset 4
+	c-indent-level 4
+	c-default-style "k&r"))
+(add-hook 'c-mode-common-hook 'my-c-mode-hook)
