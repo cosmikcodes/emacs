@@ -12,6 +12,8 @@
  '(custom-safe-themes
    (quote
     ("604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" default)))
+ '(speedbar-show-unknown-files nil)
+ '(speedbar-use-images t)
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -20,11 +22,13 @@
  ;; If there is more than one, they won't work right.
  )
 
+;; ibuffer
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(autoload 'ibuffer "ibuffer" "List buffers." t)
+
 ;; speedbar
 (require 'sr-speedbar)
 (setq sr-speedbar-auto-refresh t)
-(setq speedbar-show-unknown-files t) ; show all files
-(setq speedbar-use-images nil) ; use text for buttons
 (setq sr-speedbar-right-side nil) ; put on left side
 
 ;; start auto-complete with emacs
@@ -57,3 +61,4 @@
 	c-indent-level 4
 	c-default-style "k&r"))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
+
