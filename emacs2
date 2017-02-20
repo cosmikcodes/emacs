@@ -1,0 +1,109 @@
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
+ '(custom-enabled-themes (quote (badwolf)))
+ '(custom-safe-themes
+   (quote
+    ("c7a9a68bd07e38620a5508fef62ec079d274475c8f92d75ed0c33c45fbe306bc" "9d91458c4ad7c74cf946bd97ad085c0f6a40c370ac0a1cbeb2e3879f15b40553" "d5b121d69e48e0f2a84c8e4580f0ba230423391a78fcb4001ccb35d02494d79e" "eb0a314ac9f75a2bf6ed53563b5d28b563eeba938f8433f6d1db781a47da1366" "604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" default)))
+ '(fci-rule-color "#383838")
+ '(font-use-system-font t)
+ '(nrepl-message-colors
+   (quote
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
+ '(package-selected-packages
+   (quote
+    (monokai-theme zenburn-theme flycheck-pkg-config flycheck-irony blackboard-theme dracula-theme yasnippet ws-butler use-package sr-speedbar iedit google-c-style flymake-google-cpplint dtrt-indent company-irony company-c-headers cmake-mode clean-aindent-mode badwolf-theme auto-complete-c-headers)))
+ '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
+ '(sr-speedbar-default-width 20)
+ '(sr-speedbar-max-width 20)
+ '(tool-bar-mode nil)
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Inconsolata" :foundry "PfEd" :slant normal :weight normal :height 108 :width normal)))))
+
+
+;; melpa
+(require 'package)
+(setq package-enable-at-startup nil)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+(package-initialize)
+
+;; sr-speedbar
+(add-hook 'emacs-startup-hook (lambda ()
+  (sr-speedbar-open)
+  ))
+
+;; theme
+(load-theme 'badwolf t)
+
+;; ibuffer
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(autoload 'ibuffer "ibuffer" "List buffers." t)
+
+;; speedbar
+(require 'sr-speedbar)
+(setq sr-speedbar-auto-refresh t)
+(setq sr-speedbar-right-side nil) ; put on left side
+
+;; start auto-complete with emacs
+(require 'auto-complete)
+
+;; do default config for auto-complete
+(require 'auto-complete-config)
+(ac-config-default)
+
+;; start yasnippet with emacs
+(require 'yasnippet)
+(yas-global-mode 1)
+
+;; let's define a function which initializes auto-complete-c-headers and gets called for c/c++ hooks
+(defun my:ac-c-header-init ()
+  (require 'auto-complete-c-headers)
+  (add-to-list 'ac-sources 'ac-source-c-headers)
+  (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-redhat-linux/6.3.1/include")
+)
+;; now let's call this function from c/c++ hooks
+(add-hook 'c++-mode-hook 'my:ac-c-header-init)
+(add-hook 'c-mode-hook 'my:ac-c-header-init)
+
+;; iedit
+(define-key global-map (kbd "C-c ;") 'iedit-mode)
+
+;; style
+(defun my-c-mode-hook ()
+  (setq c-basic-offset 4
+	c-indent-level 4
+	c-default-style "k&r"))
+(add-hook 'c-mode-common-hook 'my-c-mode-hook)
